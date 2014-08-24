@@ -1,0 +1,134 @@
+\name{andy2011}
+\alias{andy2011}
+\docType{data}
+\title{
+%%   ~~ data name/kind ... ~~
+}
+\description{
+%%  ~~ A concise (1-5 lines) description of the dataset. ~~
+}
+\usage{data("andy2011")}
+\format{
+  The format is:
+Formal class 'MSnSet' [package "MSnbase"] with 9 slots
+  ..@ experimentData   :Formal class 'MIAPE' [package "MSnbase"] with 30 slots
+  .. .. ..@ title                   : chr ""
+  .. .. ..@ url                     : chr ""
+  .. .. ..@ abstract                : chr ""
+  .. .. ..@ pubMedIds               : chr ""
+  .. .. ..@ samples                 :List of 3
+  .. .. .. ..$ species : chr "Human"
+  .. .. .. ..$ tissue  : chr "Embryonic Kidney Fibroblast Cells (HEK293T)"
+  .. .. .. ..$ operator: chr "Andy Christoforou"
+  .. .. ..@ preprocessing           : list()
+  .. .. ..@ other                   :List of 3
+  .. .. .. ..$ experimentType  : chr "Standard LOPIT experimental design on HEK293T. Label: iTRAQ 8-plex. Instrument: LTQ Orbitrap Velos. Scan Mode for Identificatio"| __truncated__
+  .. .. .. ..$ searchParameters: chr "Search Engine: Mascot. Search Database: UniProt Human. Fixed Modifications: iTRAQ 8-plex (N-term), iTRAQ-8plex (K), MMTS (C). V"| __truncated__
+  .. .. .. ..$ postProcessing  : chr "Maximum Parent Proteins: 1. Unquantifiable spectra (E-value for PSM > 0.05, non-unique sequences, very low ion counts, >2 zero "| __truncated__
+  .. .. ..@ dateStamp               : chr "2011-07"
+  .. .. ..@ name                    : chr "Andy Christoforou"
+  .. .. ..@ lab                     : chr "Cambridge Centre for Proteomics (CCP)"
+  .. .. ..@ contact                 : chr "Kathryn S. Lilley"
+  .. .. ..@ email                   : chr "k.s.lilley@bioc.cam.ac.uk"
+  .. .. ..@ instrumentModel         : chr "LTQ Orbitrap Velos"
+  .. .. ..@ instrumentManufacturer  : chr "ThermoScientific"
+  .. .. ..@ instrumentCustomisations: chr(0) 
+  .. .. ..@ softwareName            : chr "Mascot Search Engine"
+  .. .. ..@ softwareVersion         : chr(0) 
+  .. .. ..@ switchingCriteria       : chr(0) 
+  .. .. ..@ isolationWidth          : num 0.5
+  .. .. ..@ parameterFile           : chr(0) 
+  .. .. ..@ ionSource               : chr "New Objective PicoView nano-electrospray"
+  .. .. ..@ ionSourceDetails        : chr(0) 
+  .. .. ..@ analyser                : chr "Orbitrap"
+  .. .. ..@ analyserDetails         : chr(0) 
+  .. .. ..@ collisionGas            : chr(0) 
+  .. .. ..@ collisionPressure       : num(0) 
+  .. .. ..@ collisionEnergy         : chr "45% CE HCD (two-stepped, 10% width)"
+  .. .. ..@ detectorType            : chr "Orbitrap"
+  .. .. ..@ detectorSensitivity     : chr(0) 
+  .. .. ..@ .__classVersion__       :Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 2
+  .. .. .. .. .. ..$ : int [1:3] 1 0 0
+  .. .. .. .. .. ..$ : int [1:3] 0 2 2
+  ..@ processingData   :Formal class 'MSnProcess' [package "MSnbase"] with 10 slots
+  .. .. ..@ files            : chr "andy2011_ispy_results_proteins_stringent.csv"
+  .. .. ..@ processing       : chr [1:2] "Loaded on Tue Mar 19 11:55:15 2013." "Normalised to sum of intensities."
+  .. .. ..@ merged           : logi(0) 
+  .. .. ..@ cleaned          : logi(0) 
+  .. .. ..@ removedPeaks     : chr(0) 
+  .. .. ..@ smoothed         : logi(0) 
+  .. .. ..@ trimmed          : num(0) 
+  .. .. ..@ normalised       : logi TRUE
+  .. .. ..@ MSnbaseVersion   : chr "1.7.23"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 0 1 3
+  ..@ qual             :'data.frame':	0 obs. of  0 variables
+Formal class 'data.frame' [package "methods"] with 4 slots
+  .. .. ..@ .Data    : list()
+  .. .. ..@ names    : chr(0) 
+  .. .. ..@ row.names: int(0) 
+  .. .. ..@ .S3Class : chr "data.frame"
+  ..@ assayData        :<environment: 0x7f93e7a14380> 
+  ..@ phenoData        :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame':	1 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr NA
+  .. .. ..@ data             :'data.frame':	8 obs. of  1 variable:
+  .. .. .. ..$ Fraction.information: Factor w/ 2 levels "High Density",..: 1 1 1 1 1 1 1 2
+  .. .. ..@ dimLabels        : chr [1:2] "sampleNames" "sampleColumns"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  ..@ featureData      :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame':	7 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr [1:7] "UniProtKB accession number" "Full protein name" "Peptides" "Peptide spectrum match" ...
+  .. .. ..@ data             :'data.frame':	1371 obs. of  7 variables:
+  .. .. .. ..$ Accession.No.      : Factor w/ 1371 levels "A0FGR8","A1L0T0",..: 39 543 819 1291 698 329 1087 812 604 1065 ...
+  .. .. .. .. ..- attr(*, "names")= chr [1:1371] "ACOD_HUMAN" "AL3A2_HUMAN" "ALG11_HUMAN" "AMFR2_HUMAN" ...
+  .. .. .. ..$ Protein.Description: Factor w/ 1361 levels "10 kDa heat shock protein, mitochondrial",..: 124 487 185 418 624 1081 351 658 405 357 ...
+  .. .. .. .. ..- attr(*, "names")= chr [1:1371] "ACOD_HUMAN" "AL3A2_HUMAN" "ALG11_HUMAN" "AMFR2_HUMAN" ...
+  .. .. .. ..$ Peptides           : Factor w/ 10 levels " 1","10","11",..: 4 4 1 1 4 4 1 5 4 1 ...
+  .. .. .. .. ..- attr(*, "names")= chr [1:1371] "ACOD_HUMAN" "AL3A2_HUMAN" "ALG11_HUMAN" "AMFR2_HUMAN" ...
+  .. .. .. ..$ PSMs               : Factor w/ 10 levels " 1","10","11",..: 4 4 1 1 4 4 1 5 4 1 ...
+  .. .. .. .. ..- attr(*, "names")= chr [1:1371] "ACOD_HUMAN" "AL3A2_HUMAN" "ALG11_HUMAN" "AMFR2_HUMAN" ...
+  .. .. .. ..$ pd.2013            : Factor w/ 13 levels "ER","Golgi","Mitochondrion",..: 1 1 1 1 1 1 1 1 1 1 ...
+  .. .. .. .. ..- attr(*, "names")= chr [1:1371] "ACOD_HUMAN" "AL3A2_HUMAN" "ALG11_HUMAN" "AMFR2_HUMAN" ...
+  .. .. .. ..$ pd.markers         : Factor w/ 10 levels "Chromatin associated",..: 4 4 4 4 4 4 4 4 4 4 ...
+  .. .. .. .. ..- attr(*, "names")= chr [1:1371] "ACOD_HUMAN" "AL3A2_HUMAN" "ALG11_HUMAN" "AMFR2_HUMAN" ...
+  .. .. .. ..$ markers            : Factor w/ 5 levels "ER","Golgi","Mitochondrion",..: 1 1 1 1 1 1 1 1 1 1 ...
+  .. .. .. .. ..- attr(*, "names")= chr [1:1371] "ACOD_HUMAN" "AL3A2_HUMAN" "ALG11_HUMAN" "AMFR2_HUMAN" ...
+  .. .. ..@ dimLabels        : chr [1:2] "featureNames" "featureColumns"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  ..@ annotation       : chr(0) 
+  ..@ protocolData     :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame':	0 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr(0) 
+  .. .. ..@ data             :'data.frame':	8 obs. of  0 variables
+  .. .. ..@ dimLabels        : chr [1:2] "sampleNames" "sampleColumns"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. ..@ .Data:List of 5
+  .. .. .. ..$ : int [1:3] 3 0 0
+  .. .. .. ..$ : int [1:3] 2 19 2
+  .. .. .. ..$ : int [1:3] 1 3 0
+  .. .. .. ..$ : int [1:3] 0 1 0
+  .. .. .. ..$ : int [1:3] 0 4 0
+}
+\details{%%  ~~ If necessary, more details than the __description__ above ~~
+}
+\source{
+%%  ~~ reference to a publication or URL from which the data were obtained ~~
+}
+\references{
+%%  ~~ possibly secondary sources and usages ~~
+}
+\examples{
+data(andy2011)
+## maybe str(andy2011) ; plot(andy2011) ...
+}
+\keyword{datasets}

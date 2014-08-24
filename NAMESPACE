@@ -1,0 +1,9 @@
+## Depends
+
+## Imports
+import(maptools)
+
+## Export
+export(.meanManualMeasure)
+export(.calculateModelValues)
+
