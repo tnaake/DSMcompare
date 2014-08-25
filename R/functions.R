@@ -2,7 +2,20 @@
 ## a collection to store model values
 ## setClass("manualMeasure", )
 
+## functions to read in shp data (vectorized, contains path)
+.readManualMeasure <- .readModel <- function(files) {
+    .len <- length(files)
+    ans <- list()
+    for (i in 1:.len)
+        ans[[i]] <- readShapePoints(files)
+    return(ans)
+}
 
+.cutData <- function(uncutfiles, 
+    columns = list("x_coord" = 1, "y_coord" = 2, "z_coord" = 3, "class" = 4)) {
+    
+    
+}
 
 #' @title
 #' @aliases
@@ -12,39 +25,39 @@
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) class (fourth column)
 #' @export
+
+mM <- list("/Users/thomasnaake/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra1.shp",
+    "/Users/thomasnaake/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra2.shp",
+    "/Users/thomasnaake/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra3.shp")
+
 .meanManualMeasure <- function(manualMeasure) {
     if (!is.list(manualMeasure))
         stop("argument is not a list")
     if (length(manualMeasure) == 0)
         stop ("argument is of length 0")
     .len <- length(manualMeasure)
-    .info <- manualMeasure[[1]]
+    .meta <- manualMeasure[[1]]
     .mean <- lapply(manualMeasure, "[", 3)
     .mean <- as.data.frame(.mean)
     .mean <- apply(.mean, MARGIN = 1, mean)
     
-    .sub <- rep(NA, dim(manualMeasure[[1]])[[1]])
+    .sub <- rep(NA, dim(.meta)[1])
     ans <- data.frame("x_coord" = .sub, "y_coord" = .sub, 
                       "mean" = .sub, "class" = .sub)
     ## load column 1 with x-coordinates
-    ans[, 1] <- .info[, 1]
+    ans[, 1] <- .meta[, 1]
     ## load column 2 with y-coordinates
-    ans[, 2] <- .info[, 2]
+    ans[, 2] <- .meta[, 2]
     ## load column 3 with mean heights 
     ans[, 3] <- .mean
     ## load column 4 with class
-    ans[, 4] <- .info[, 3]
+    ans[, 4] <- .meta[, 3]
     
     return(ans)
 }
 
-## .readModels <- function(files) {
-##     .len <- length(files)
-##     ans <- list()
-##     for (i in 1:.len)
-##         ans[[i]] <- readShapePoints(files)
-##     return(ans)
-## }
+
+
 .calculateModelValues <- function(coordinates, model, method = c("2D", "IDW"),
                                     idw = list("p" = 2, "m" = 5, "rad" = 5)) {
     .lenCoord <- dim(coordinates)[1]
@@ -169,6 +182,22 @@
 .errorModel <- function(manual, model) {
     ans <- manual - model
 }
+
+## a function to create and concatenate heights from different models 
+.calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
+                              idw = list("p" = 2, "m" = 5, "rad" = 5)) {
+    
+    .lenCoord <- dim(coordinates)[1]
+    .mat <- (NA, nrow = .lenCoord, ncol = 2*length(model))
+    for (i in 1:length(model)) {
+        .values <- .meanManualMeasure(coordinates = coordinates, model = model, 
+                        method = method, idw = list(idw$p, idw$m, idw$rad))
+        .mat[, i] <- .values[, 1]
+        .mat[, i + 1] <- .values[, 2]
+    }
+    return(.mat)
+}
+
 
 #'@name Kolmogorov-Smirnow and plot
 #'@author Thomas Naake <thomasnaake@@gmx.de>
