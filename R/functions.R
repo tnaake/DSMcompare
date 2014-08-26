@@ -11,11 +11,22 @@
     return(ans)
 }
 
-# .cutData <- function(uncutfiles, 
-#     columns = list("x_coord" = 1, "y_coord" = 2, "z_coord" = 3, "class" = 4)) {
-#     
-#     
-# }
+## function to extract x, y, z and class from raw data
+.cutData <- function(uncutfiles, 
+    columns = list("x_coord" = 1, "y_coord" = 2, "z_coord" = 3, "class" = 4)) {
+    .len <- length(uncutfiles)
+    ans <- list()
+    for (i in 1:.len) {
+        .data <- uncutfiles[[i]]
+        .newAns <- matrix(nrow = dim(.data)[1], ncol = 4)
+        .newAns[, 1] <- as.data.frame(.data[, columns$x_coord])[, 1]
+        .newAns[, 2] <- as.data.frame(.data[, columns$y_coord])[, 1]
+        .newAns[, 3] <- as.data.frame(.data[, columns$class])[, 1]
+        .newAns[, 4] <- as.data.frame(.data[, columns$z_coord])[, 1]
+        ans[[i]] <- .newAns
+    }  
+    return(ans)
+}
 
 #' @title
 #' @aliases
