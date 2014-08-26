@@ -11,11 +11,11 @@
     return(ans)
 }
 
-.cutData <- function(uncutfiles, 
-    columns = list("x_coord" = 1, "y_coord" = 2, "z_coord" = 3, "class" = 4)) {
-    
-    
-}
+# .cutData <- function(uncutfiles, 
+#     columns = list("x_coord" = 1, "y_coord" = 2, "z_coord" = 3, "class" = 4)) {
+#     
+#     
+# }
 
 #' @title
 #' @aliases
