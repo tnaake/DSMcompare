@@ -23,7 +23,7 @@
         .newAns[, 2] <- as.data.frame(.data[, columns$y_coord])[, 1]
         .newAns[, 3] <- as.data.frame(.data[, columns$class])[, 1]
         .newAns[, 4] <- as.data.frame(.data[, columns$z_coord])[, 1]
-        ans[[i]] <- .newAns
+        ans[[i]] <- .newAns 
     }  
     return(ans)
 }
@@ -190,9 +190,7 @@ mM <- list("/Users/thomasnaake/Documents/University/Bachelor/FVA/Daten/Messpunkt
         ## END: IDW ## 
 }
 
-.errorModel <- function(manual, model) {
-    ans <- manual - model
-}
+
 
 ## a function to create and concatenate heights from different models 
 .calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
@@ -209,7 +207,13 @@ mM <- list("/Users/thomasnaake/Documents/University/Bachelor/FVA/Daten/Messpunkt
     return(.mat)
 }
 
+.errorModel <- function(manual, model) {
+    ans <- manual - model
+    return(ans)
+}
 
+
+xy <- as.data.frame(mM[[1]][,6])[,1] - mastermat[,1]
 #'@name Kolmogorov-Smirnow and plot
 #'@author Thomas Naake <thomasnaake@@gmx.de>
 #'@param manual a list of length 1 containing values to compare
@@ -218,14 +222,24 @@ mM <- list("/Users/thomasnaake/Documents/University/Bachelor/FVA/Daten/Messpunkt
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) class (fourth column)
 #'@aliases
-# .ksPlot <- function(manual, model, class = FALSE) {
-#     if (!is.list(modell))
-#         stop("argument is not a list")
-#     if (length(modell) == 0)
-#         stop("argument is of length 0")
-#     
-#     modell <- modell[[1]]
-#     .error <- modell - mean(modell)
-#     xyplot()
-#     
-# }
+ksPlot <- function(manual, model, class = FALSE) {
+    if (!is.list(modell))
+        stop("argument is not a list")
+    if (length(modell) == 0)
+        stop("argument is of length 0")
+    
+    .ind <- which(model[, 1] == 0)
+    model <- model[-.ind]
+    manual <- manual[-.ind]
+    .error <- .errorModel(manual, model)
+    .bins <- seq(floor(min(.error)), ceiling(max(.error)), by = 1)
+    p1 <- hist(.error, breaks = .bins, col = rgb(0, 0, 1, 1/4), freq = F)
+    set.seed(1)
+    .r <- rnorm(n = length(.error), mean = mean(.error), sd = sd(.error))
+    points(density(.r), type = "p", title = "")
+    qqplot(x = .r, y = .error, ylab = "Sample Quantiles", 
+        xlab = "Theoretical Quantiles", main = "Normal Q-Q plot")
+    points(sort(.r), sort(.r), col = "red", type = "l", lty = 2, lwd = 2)
+    ks.test(.error, .r)
+    xyplot()     
+}
