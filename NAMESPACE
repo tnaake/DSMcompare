@@ -1,9 +1,12 @@
 ## Depends
-
+import(maptools
 ## Imports
-import(maptools)
+
 
 ## Export
-export(.meanManualMeasure)
-export(.calculateModelValues)
-
+export(readManualMeasure)
+export(cutData)
+export(meanManualMeasure)
+export(calculateModelValues)
+export(errorModel)
+export(errorNormaltest)       

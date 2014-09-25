@@ -5,15 +5,15 @@ mM <- c("/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpun
 
 ## work flow
 ## read manual measurements
-lmM <- .readManualMeasure(files = mM)
+lmM <- readManualMeasure(files = mM)
 
 ## cut data
-cmM <- .cutData(uncutfiles =  list(lmM[[1]], lmM[[2]]), ## Messpunkte_Petra3 has different allocation
+cmM <- cutData(uncutfiles =  list(lmM[[1]], lmM[[2]]), ## Messpunkte_Petra3 has different allocation
          columns = list("x_coord" = 9, "y_coord" = 10, "z_coord" = 6, "class" = 3), 
          omit.class= FALSE)
 
 ## calculate means of cut manual Measure
-mcmM <- .meanManualMeasure(manualMeasure = cmM)
+mcmM <- meanManualMeasure(manualMeasure = cmM)
 
 ## modelValues
     coordinatesModel <- mcmM[, 1:2]
@@ -28,7 +28,7 @@ mcmM <- .meanManualMeasure(manualMeasure = cmM)
         modelIDW <- .calculateModelValues(coordinates = coordinatesModel, model = MTb1, method = "IDW", 
             idw = list("p" = 2, "m" = 5, "rad" = 5))
     
-    cModh <- .calcModelHeights(coordinates = coordinatesModel, 
+    cModh <- calcModelHeights(coordinates = coordinatesModel, 
                   model = list(MTb1 = MTb1, MTb2 = MTb2, MTb3 = MTb3), 
                   method = "2D", 
                   idw = list("p" = 2, "m" = 5, "rad" = 5))

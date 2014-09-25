@@ -4,7 +4,7 @@
 ## setClass("manualMeasure", )
 
 ## functions to read in shp data (vectorized, contains path)
-.readManualMeasure <- .readModel <- function(files) {
+readManualMeasure <- .readModel <- function(files) {
     .len <- length(files)
     ans <- list()
     for (i in 1:.len)
@@ -14,7 +14,7 @@
 
 ## function to extract x, y, z and class from raw data
 ## returns a list of data frames
-.cutData <- function(uncutfiles, 
+cutData <- function(uncutfiles, 
     columns = list("x_coord" = 1, "y_coord" = 2, "z_coord" = 3, "class" = 4), omit.class = FALSE) {
     .len <- length(uncutfiles)
     ans <- list()
@@ -41,7 +41,7 @@
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) class (fourth column)
 #' @export
-.meanManualMeasure <- function(manualMeasure) {
+meanManualMeasure <- function(manualMeasure) {
     if (!is.list(manualMeasure))
         stop("argument is not a list")
     if (length(manualMeasure) == 0)
@@ -199,7 +199,7 @@
 
 ## a function to create and concatenate heights from different models 
 ## models: 1st column x, 2nd column y, 3rd column z
-.calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
+calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
                               idw = list("p" = 2, "m" = 5, "rad" = 5)) {
     
     method <- match.arg(method)
