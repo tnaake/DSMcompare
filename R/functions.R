@@ -244,7 +244,7 @@ errorModel <- function(manual, model) {
 }
 
 #'@name Kolmogorov-Smirnow and plot
-#'@author Thomas Naake <thomas.naake@@stud.uni-heidelberg.de>
+#'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
 #'@param error a list of errors to compare, each list entry is of class
 #' \code{data.frame} which contains x-coordinates (first column), 
 #' y-coordinates (second column), z-coordinates (third column) and
