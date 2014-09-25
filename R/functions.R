@@ -284,15 +284,17 @@ errorNormalTest <- function(error,
             qqplot(x = .r, y = .error, ylab = "Sample Quantiles", 
                 xlab = "Theoretical Quantiles", main = paste0("Normal Q-Q plot of e", .nameE))
             points(sort(.r), sort(.r), col = "red", type = "l", lty = 2, lwd = 2)
-            if (i < .lenError)
+            if (ksTest || (!ksTest && i < .lenError))
                 readline(prompt = "Press <Enter> to continue... ")
         }
         
         if (ksTest) {
-            .ks <- ks.test(.error, .r) 
+            .ks <- ks.test(.error, .r) ## null hypothesis 
             .ks$data.name <- paste0("error of ", .nameE, 
                                 " and modelled values of normal distribution")
-            print(.ks)            
+            print(.ks)          
+            if (i < .lenError)
+                readline(prompt = "Press <Enter> to continue... ")
         }     
     } ## end for loop
 }
