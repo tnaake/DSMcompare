@@ -249,25 +249,50 @@ errorModel <- function(manual, model) {
 #' \code{data.frame} which contains x-coordinates (first column), 
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) class (fourth column)
-#'@aliases
-ksPlot <- function(error, class = FALSE) {
+errorNormalTest <- function(error, 
+        hist = TRUE, 
+        ksTest = FALSE, 
+        qq = FALSE, classes = FALSE) {
+    
     if (!is.list(error))
         stop("argument is not a list")
     if (length(error) == 0)
         stop("argument is of length 0")
     
-#     .ind <- which(error[, 1] == 0)
-#     model <- model[-.ind]
-#     manual <- manual[-.ind]
-#     .error <- .errorModel(manual, model)
-#     .bins <- seq(floor(min(.error)), ceiling(max(.error)), by = 1)
-#     p1 <- hist(.error, breaks = .bins, col = rgb(0, 0, 1, 1/4), freq = F)
-#     set.seed(1)
-#     .r <- rnorm(n = length(.error), mean = mean(.error), sd = sd(.error))
-#     points(density(.r), type = "p", title = "")
-#     qqplot(x = .r, y = .error, ylab = "Sample Quantiles", 
-#         xlab = "Theoretical Quantiles", main = "Normal Q-Q plot")
-#     points(sort(.r), sort(.r), col = "red", type = "l", lty = 2, lwd = 2)
-#     ks.test(.error, .r)
-#     xyplot()     
+    .lenError <- length(error)
+    
+    for (i in 1:.lenError) {
+        .nameE <- names(error[i])
+        print(.nameE)
+        .error <- error[[i]][, 3]
+        .bins <- seq(floor(min(.error)), ceiling(max(.error)), by = 1)  
+        set.seed(1)
+        ## model normal distribution
+        .r <- rnorm(n = 1000, mean = mean(.error), sd = sd(.error))
+        
+        if (hist) {
+            hist(.error, breaks = .bins, 
+                col = rgb(0, 0, 1, 1/4), 
+                freq = F, 
+                main = paste0("Histogram of e", .nameE))
+            points(density(.r), type = "p")
+            if (qq || (!qq && i < .lenError))
+                readline(prompt = "Press <Enter> to continue... ")
+        }
+        
+        if (qq) {
+            qqplot(x = .r, y = .error, ylab = "Sample Quantiles", 
+                xlab = "Theoretical Quantiles", main = paste0("Normal Q-Q plot of e", .nameE))
+            points(sort(.r), sort(.r), col = "red", type = "l", lty = 2, lwd = 2)
+            if (i < .lenError)
+                readline(prompt = "Press <Enter> to continue... ")
+        }
+        
+        if (ksTest) {
+            .ks <- ks.test(.error, .r) 
+            .ks$data.name <- paste0("error of ", .nameE, 
+                                " and modelled values of normal distribution")
+            print(.ks)            
+        }     
+    } ## end for loop
 }

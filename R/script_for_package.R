@@ -1,4 +1,4 @@
-
+library(maptools)
 mM <- c("/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra1.shp",
         "/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra2.shp",
         "/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra3.shp")
@@ -37,3 +37,9 @@ mcmM <- .meanManualMeasure(manualMeasure = cmM)
 errorMod <- errorModel(manual = mcmM, model = cModh)
 
 ## test if the errors are normally distributed
+errorNormalTest(errorMod, hist = TRUE, ksTest = FALSE, 
+                qq = FALSE, classes = FALSE)
+errorNormalTest(errorMod, hist = TRUE, ksTest = FALSE,
+                qq = TRUE, classes = FALSE)
+errorNormalTest(errorMod, hist = FALSE, ksTest = TRUE,
+                qq = FALSE, classes = FALSE)
