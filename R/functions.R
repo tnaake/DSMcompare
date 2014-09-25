@@ -46,6 +46,7 @@
         stop("argument is not a list")
     if (length(manualMeasure) == 0)
         stop ("argument is of length 0")
+    
     .len <- length(manualMeasure)
     .meta <- manualMeasure[[1]]
     
@@ -222,39 +223,51 @@
    return(model)
 }
 
-.errorModel <- function(manual, model) {
-    ans <- manual - model
+errorModel <- function(manual, model) {
+    
+    if (!(is.data.frame(manual) || is.matrix(manual)))
+        stop("argument manual is neither a data frame nor a matrix")
+    if (!is.list(model))
+        stop("argument model is not a list")
+    
+    .points <- dim(manual)[1]
+    .model <- lapply(cModh, "[", 1:.points) 
+    .manual <- manual[, 3]
+    
+    ans <- list()
+    for (i in 1:length(.model)) {
+        ans[[i]] <- manual
+        ans[[i]][, 3] <- .manual - .model[[i]]
+        names(ans)[i] <- names(.model)[i]
+    }
     return(ans)
 }
 
-
-xy <- as.data.frame(mM[[1]][,6])[,1] - mastermat[,1]
 #'@name Kolmogorov-Smirnow and plot
-#'@author Thomas Naake <thomasnaake@@gmx.de>
-#'@param manual a list of length 1 containing values to compare
-#'modell a list of modells to compare, each list entry is of class
+#'@author Thomas Naake <thomas.naake@@stud.uni-heidelberg.de>
+#'@param error a list of errors to compare, each list entry is of class
 #' \code{data.frame} which contains x-coordinates (first column), 
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) class (fourth column)
 #'@aliases
-ksPlot <- function(manual, model, class = FALSE) {
-    if (!is.list(modell))
+ksPlot <- function(error, class = FALSE) {
+    if (!is.list(error))
         stop("argument is not a list")
-    if (length(modell) == 0)
+    if (length(error) == 0)
         stop("argument is of length 0")
     
-    .ind <- which(model[, 1] == 0)
-    model <- model[-.ind]
-    manual <- manual[-.ind]
-    .error <- .errorModel(manual, model)
-    .bins <- seq(floor(min(.error)), ceiling(max(.error)), by = 1)
-    p1 <- hist(.error, breaks = .bins, col = rgb(0, 0, 1, 1/4), freq = F)
-    set.seed(1)
-    .r <- rnorm(n = length(.error), mean = mean(.error), sd = sd(.error))
-    points(density(.r), type = "p", title = "")
-    qqplot(x = .r, y = .error, ylab = "Sample Quantiles", 
-        xlab = "Theoretical Quantiles", main = "Normal Q-Q plot")
-    points(sort(.r), sort(.r), col = "red", type = "l", lty = 2, lwd = 2)
-    ks.test(.error, .r)
-    xyplot()     
+#     .ind <- which(error[, 1] == 0)
+#     model <- model[-.ind]
+#     manual <- manual[-.ind]
+#     .error <- .errorModel(manual, model)
+#     .bins <- seq(floor(min(.error)), ceiling(max(.error)), by = 1)
+#     p1 <- hist(.error, breaks = .bins, col = rgb(0, 0, 1, 1/4), freq = F)
+#     set.seed(1)
+#     .r <- rnorm(n = length(.error), mean = mean(.error), sd = sd(.error))
+#     points(density(.r), type = "p", title = "")
+#     qqplot(x = .r, y = .error, ylab = "Sample Quantiles", 
+#         xlab = "Theoretical Quantiles", main = "Normal Q-Q plot")
+#     points(sort(.r), sort(.r), col = "red", type = "l", lty = 2, lwd = 2)
+#     ks.test(.error, .r)
+#     xyplot()     
 }
