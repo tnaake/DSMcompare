@@ -26,6 +26,8 @@ mcmM <- .meanManualMeasure(cmM)
     coordinatesModel <- mcmM[, 1:2]
     ## read model
     MTb1 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced1_buf5m.txt", sep = ";")
+    MTb2 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced2_buf5m.txt", sep = ";")
+    MTb3 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced3_buf5m.txt", sep = ";")
     
     ## not run
         model2D <- .calculateModelValues(coordinates = coordinatesModel, model = MTb1, method = "2D")
@@ -33,7 +35,7 @@ mcmM <- .meanManualMeasure(cmM)
         modelIDW <- .calculateModelValues(coordinates = coordinatesModel, model = MTb1, method = "IDW", 
             idw = list("p" = 2, "m" = 5, "rad" = 5))
     
-    .calcModelHeights(coordinates = coordinatesModel, 
-                  model = list(MTb1), 
+    cModh <- .calcModelHeights(coordinates = coordinatesModel, 
+                  model = list(MTb1 = MTb1, MTb2 = MTb2, MTb3 = MTb3), 
                   method = "2D", 
                   idw = list("p" = 2, "m" = 5, "rad" = 5))

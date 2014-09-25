@@ -189,7 +189,7 @@
                     .mat[i, 2] <- NA
             }                
         }
-        colnames(.mat) <- c("z_coord_IDW", "max_2Ddist_z_mod")
+        colnames(.mat) <- c("z_mod_IDW", "max_2Ddist_z_mod")
     } ## END: IDW ## 
     return(.mat)
 }
@@ -197,21 +197,30 @@
 
 
 ## a function to create and concatenate heights from different models 
+## models: 1st column x, 2nd column y, 3rd column z
 .calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
                               idw = list("p" = 2, "m" = 5, "rad" = 5)) {
     
-    .lenCoord <- dim(coordinates)[1]
-    .mat <- matrix(NA, nrow = .lenCoord, ncol = 2*length(model))
-    for (i in 1:length(model)) {
-        .values <- .calculateModelValues(coordinates = coordinates, model = model[[i]], 
-                        method = method, idw = list(idw$p, idw$m, idw$rad))
-        .mat[, i] <- .values[, 1]
-        .mat[, i + 1] <- .values[, 2]
+    method <- match.arg(method)
+    if (!(is.data.frame(coordinates) || is.matrix(coordinates)))
+        stop("argument coordinates is neither a data frame nor a matrix")
+    if (!is.list(model))
+        stop("argument model is not a list")
+    if (!min(nchar(names(model))))
+        stop("model is not a fully named list")
+    
+    .lenMod <- length(model)
+
+    for (i in 1:.lenMod) {
+        .values <- .calculateModelValues(coordinates = coordinates, 
+                                        model = model[[i]], 
+                                        method = method, 
+                                        idw = list(idw$p, idw$m, idw$rad))
+        model[[i]] <- .values
+        print(paste0("model ", names(model)[i], ": ", i, " / ", .lenMod))
     }
-    return(.mat)
+   return(model)
 }
-
-
 
 .errorModel <- function(manual, model) {
     ans <- manual - model
