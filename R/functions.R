@@ -90,6 +90,7 @@
         }
         .mat[, 1] <- .zMinDist
         .mat[, 2] <- .minDist
+        colnames(.mat) <- c("z_mod_2D", "min_2Ddist_z_mod")
         ## END: 2D ##
     } else {
         ## START: IDW ## 
@@ -186,9 +187,9 @@
                     .mat[i, 2] <- max(.dist[which(.dist <= max(.Cpn))[1:length(.Cpn)]])
                 else 
                     .mat[i, 2] <- NA
-            }
-                
+            }                
         }
+        colnames(.mat) <- c("z_coord_IDW", "max_2Ddist_z_mod")
     } ## END: IDW ## 
     return(.mat)
 }
