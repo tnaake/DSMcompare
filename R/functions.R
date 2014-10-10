@@ -99,7 +99,7 @@ meanManualMeasure <- function(manualMeasure) {
         .p <- idw$p 
         ## number of points which are used
         .m <- idw$m
-        ## use points which are iwd$rad m far from the coordinate point
+        ## use points which are iwd$rad [m] far from the coordinate point
         .rad <- idw$rad
         
         ## vector which will contain height
@@ -248,7 +248,7 @@ errorModel <- function(manual, model) {
 #'@param error a list of errors to compare, each list entry is of class
 #' \code{data.frame} which contains x-coordinates (first column), 
 #' y-coordinates (second column), z-coordinates (third column) and
-#' (optionally) class (fourth column)
+#' (optionally) classes (fourth column)
 errorNormalTest <- function(error, 
         hist = TRUE, 
         ksTest = FALSE, 
@@ -289,7 +289,7 @@ errorNormalTest <- function(error,
         }
         
         if (ksTest) {
-            .ks <- ks.test(.error, .r) ## null hypothesis 
+            .ks <- ks.test(.error, .r) ## null hypothesis: same distribution
             .ks$data.name <- paste0("error of ", .nameE, 
                                 " and modelled values of normal distribution")
             print(.ks)          
@@ -297,4 +297,119 @@ errorNormalTest <- function(error,
                 readline(prompt = "Press <Enter> to continue... ")
         }     
     } ## end for loop
+}
+
+#'@name Non-parametric statistics for non-normally distributed errors
+#'@return A list. Each list entry comprises a data frame which bears the 
+#'statistical parameters
+#'@param error A list containing error values of models, each list entry is of class
+#' \code{data.frame} which contains x-coordinates (first column), 
+#' y-coordinates (second column), z-coordinates (third column) and
+#' (optionally) classes (fourth column)
+#'@param param A vector comprising characters which methods to use
+#'@param classes logical, indicating if classes will be used concerning calculation 
+#'of the statistics
+stat <- function(error, cfi = TRUE, classes = FALSE) {
+    
+    .lenError <- length(error)
+    ans <- error
+    .df <- as.data.frame(matrix(ncol = ifelse(cfi, 3, 1), nrow = 5))
+    colnames(.df) <- ifelse(cfi, c("value", "cfi_l", "cfi_r"), c("value"))
+    rownames(.df) <- c("68%quantile", "95%quantile", "median", "NMAD", "max|h|")
+
+    for (i in 1:.lenError) {
+        
+        ## index each list entry
+        .error <- error[[i]]
+        .n <- dim(.error)[1]
+        ## 68% quantile
+        .q68 <- vector("numeric", length = 2000)
+        .q68[2000] <- quantile(abs(.error[, 3]), 0.683)
+        .df[1, 1] <- .q68[2000]
+        ## 95% quantile
+        .q95 <- vector("numeric", length = 2000)
+        .q95[2000] <- quantile(abs(.error[, 3]), 0.95)
+        .df[2, 1] <- .q95[2000]
+        ## median
+        .med <- vector("numeric", length = 2000)
+        .med[2000] <- median(.error[, 3])
+        .df[3, 1] <- .med[2000]
+        ## NMAD
+        .nmad <- vector("numeric", length = 2000)
+        .nmad[2000] <- 1.4826 * median(abs(.error[, 3] - median(.error[, 3])))
+        .df[4, 1] <- .nmad[2000]
+        ## hmax
+        .df[5, 1] <- max(abs(.error[, 3]))
+        
+        if (cfi) {
+            for (j in 1:1999) {
+                ## calculate via bootstrapping 95% confidence intervall for parameter
+                .sample <- sample(.error[, 3], size = .n, replace = T)
+                ## 68.3 % quantile
+                .q68[j] <- quantile(abs(.sample), 0.683)
+                ## 95% quantile
+                .q95[j] <- quantile(abs(.sample), 0.95)
+                ## median
+                .med[j] <- median(.sample)
+                ## NMAD
+                .nmad[j] <- 1.4826 * median(abs(.sample - median(.sample)))
+            }
+            ## 68% quantile
+            .df[1, 2] <- quantile(.q68, 0.025)
+            .df[1, 3] <- quantile(.q68, 0.975)
+            ## 95% quantile            
+            .df[2, 2] <- quantile(.q95, 0.025)
+            .df[2, 3] <- quantile(.q95, 0.975)
+            ## median    
+            .df[3, 2] <- quantile(.med,0.025)
+            .df[3, 3] <- quantile(.med,0.0975)
+            ## NMAD
+            .df[4, 2] <- quantile(.nmad, 0.025)
+            .df[4, 3] <- quantile(.nmad, 0.975)
+        }
+        
+        ans[[i]] <- .df
+        
+    }
+    return(ans)
+    
+}
+
+#'@name plotStats
+plotStats <- function(stats, param = c("median", "NMAD", "max|h|")) {
+   
+    param <- match.arg(arg = param, 
+        choices = c("median", "NMAD", "max|h|"), several.ok = TRUE)
+    
+    .valq68 <- unlist(lapply(stats, "[[", 1, 1))
+    .valq95 <- unlist(lapply(stats, "[[", 2, 1))
+    .valmed <- unlist(lapply(stats, "[[", 3, 1))
+    .valnmad <- unlist(lapply(stats, "[[", 4, 1))
+    .valhmax <- unlist(lapply(stats, "[[", 5, 1))
+    
+    .maxval <- max(.valq95)
+    if ("max|h|" %in% param)
+        .maxval <- c(.maxval, .valhmax)
+    .maxval <- max(.maxval)
+        
+    barplot(.valq95, border = FALSE, beside = TRUE, ylab=c("|dh|"), 
+        col="lightgrey", axes = T, xpd = FALSE, 
+        ylim=c(0, .maxval))
+    barplot(.valq68, border = FALSE, beside = TRUE, add = T, col = "darkgrey",
+        axes = FALSE, xpd = FALSE)
+    
+    x0 <- seq(0.2, .lenError * 3, 1.2)
+    x1 <- seq(1.2, .lenError * 3, 1.2)
+    .lenError <- length(stats)
+    
+    for (i in 1:.lenError) {
+        segments(x0 = x0[i], x1 = x1[i], y0 = .valq68[i], lwd = 1, col = "lightgrey")
+        segments(x0 = x0[i], x1 = x1[i], y0 = .valq95[i], lwd = 1, col = "darkgrey")
+        if ("max|h|" %in% param)
+            segments(x0 = x0[i], x1 = x1[i], y0 = .valhmax[i], lwd = 1, col = "black")
+        if ("median" %in% param)
+            segments(x0 = x0[i], x1 = x1[i], y0 = .valmed[i], lwd = 2, col = "chocolate1")
+        if ("NMAD" %in% param)
+            segments(x0 = x0[i], x1 = x1[i], y0 = .valnmad[i], lwd = 2, col = "chartreuse3")
+    }    
 }

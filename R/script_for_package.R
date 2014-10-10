@@ -43,3 +43,9 @@ errorNormalTest(errorMod, hist = TRUE, ksTest = FALSE,
                 qq = TRUE, classes = FALSE)
 errorNormalTest(errorMod, hist = FALSE, ksTest = TRUE,
                 qq = FALSE, classes = FALSE)
+
+## calculate parameter-free statistic values
+statValues <- stat(errorMod, cfi = FALSE, classes = FALSE)
+statValues <- stat(errorMod, cfi = TRUE, classes = FALSE)
+
+plotStats(statValues, param = c("NMAD", "median", "max|h|"))
