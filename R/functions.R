@@ -112,9 +112,9 @@ meanManualMeasure <- function(manualMeasure) {
             .Cp <- .dist[.ind] ## Cp = {Di | d <= r}, r = rad
             ## ordering of the Di by increasing distance from P
             .Cpn <- sort(.Cp) 
-            if (length(.Cp) < .m)
+            if (length(.Cp) < .m) {
                 .Cpn <- .Cpn[1:length(.Cp)]
-            else
+            } else 
                 .Cpn <- .Cpn[1:.m]
             ## vector for weighting factors
             .method <- vector("numeric", length(.Cpn))
@@ -216,7 +216,9 @@ calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
         .values <- .calculateModelValues(coordinates = coordinates, 
                                         model = model[[i]], 
                                         method = method, 
-                                        idw = list(idw$p, idw$m, idw$rad))
+                                        idw = list("p" = idw$p, 
+                                                   "m" = idw$m, 
+                                                   "rad" = idw$rad))
         model[[i]] <- .values
         print(paste0("model ", names(model)[i], ": ", i, " / ", .lenMod))
     }
@@ -398,9 +400,10 @@ plotStats <- function(stats, param = c("median", "NMAD", "max|h|")) {
     barplot(.valq68, border = FALSE, beside = TRUE, add = T, col = "darkgrey",
         axes = FALSE, xpd = FALSE)
     
+    .lenError <- length(stats)
     x0 <- seq(0.2, .lenError * 3, 1.2)
     x1 <- seq(1.2, .lenError * 3, 1.2)
-    .lenError <- length(stats)
+    
     
     for (i in 1:.lenError) {
         segments(x0 = x0[i], x1 = x1[i], y0 = .valq68[i], lwd = 1, col = "lightgrey")

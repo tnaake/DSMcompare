@@ -30,7 +30,7 @@ mcmM <- meanManualMeasure(manualMeasure = cmM)
     
     cModh <- calcModelHeights(coordinates = coordinatesModel, 
                   model = list(MTb1 = MTb1, MTb2 = MTb2, MTb3 = MTb3), 
-                  method = "2D", 
+                  method = "IDW", 
                   idw = list("p" = 2, "m" = 5, "rad" = 5))
 
 ## calculate error between manual measure and model values
