@@ -3,11 +3,13 @@
 ## a collection to store model values
 ## setClass("manualMeasure", )
 
-#'@title readManualMeasure
+#'@title Read manual measurements
+#'@name readManualMeasure
 #'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
 #'@usage readManualMeasure(files)
-#'@example \notrun{
-#'readManualMeasure(files)}#'
+#'@examples \dontrun{
+#'readManualMeasure(files)
+#'}
 #'@description Read .shp files using maptools::readShapePoints() of a 
 #'vector with given file paths pointing to the favoured files. The function 
 #'will read the files and create an list object which contains the files.
@@ -21,13 +23,19 @@ readManualMeasure <- .readModel <- function(files) {
         ans[[i]] <- readShapePoints(files[i])
     return(ans)
 }
+
 #'@title cutData
 #'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
 #'@usage cutData(uncutfiles, 
 #'          columns = list("x_coord" = 1, "y_coord" = 2, 
 #'                              "z_coord" = 3, "class" = 4),
 #'          omit.class = FALSE)
-#'@example 
+#'@examples \dontrun{
+#'cutData(uncutfiles, 
+#'          columns = list("x_coord" = 1, "y_coord" = 2, 
+#'                              "z_coord" = 3, "class" = 4),
+#'          omit.class = FALSE)
+#'}
 #'@description a function to extract x, y, z and class from raw data.
 #'@param uncutfiles a list of raw data e.g. uncut manual measures
 #'columns a list given the column of x-coordinates, y-coordinates, z-coordinates 
@@ -226,7 +234,7 @@ meanManualMeasure <- function(manualMeasure) {
 #'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
 #'@usage calcModelHeights(coordinates, model, method = c("2D", "IDW"),
 #'                          idw = list("p" = 2, "m", "rad" = 5))
-#'@example \notrun{
+#'@examples \dontrun{
 #'calcModelHeights(coordinates, model, method = c("2D", "IDW"),
 #'                          idw = list("p" = 2, "m", "rad" = 5))
 #'}
@@ -271,7 +279,7 @@ calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
 #'@title Calculate error values 
 #'@usage errorModel(manual, model)
 #'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
-#'@example \notrun{
+#'@examples \dontrun{
 #'errorModel(manual, model)
 #'}
 #'@description a function to calculate the errors of model and manual 
@@ -309,6 +317,7 @@ errorModel <- function(manual, model) {
 #' \code{data.frame} which contains x-coordinates (first column), 
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) classes (fourth column)
+#' @export
 errorNormalTest <- function(error, 
         hist = TRUE, 
         ksTest = FALSE, 
