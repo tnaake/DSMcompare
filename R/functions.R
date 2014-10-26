@@ -3,7 +3,17 @@
 ## a collection to store model values
 ## setClass("manualMeasure", )
 
-## functions to read in shp data (vectorized, contains path)
+#'@title readManualMeasure
+#'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
+#'@usage readManualMeasure(files)
+#'@example \notrun{
+#'readManualMeasure(files)}#'
+#'@description Read .shp files using maptools::readShapePoints() of a 
+#'vector with given file paths pointing to the favoured files. The function 
+#'will read the files and create an list object which contains the files.
+#'@param files a vector with characters giving the file paths.
+#'@return a list which contains the individual models 
+#'@export
 readManualMeasure <- .readModel <- function(files) {
     .len <- length(files)
     ans <- list()
@@ -11,7 +21,22 @@ readManualMeasure <- .readModel <- function(files) {
         ans[[i]] <- readShapePoints(files[i])
     return(ans)
 }
-
+#'@title cutData
+#'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
+#'@usage cutData(uncutfiles, 
+#'          columns = list("x_coord" = 1, "y_coord" = 2, 
+#'                              "z_coord" = 3, "class" = 4),
+#'          omit.class = FALSE)
+#'@example 
+#'@description a function to extract x, y, z and class from raw data.
+#'@param uncutfiles a list of raw data e.g. uncut manual measures
+#'columns a list given the column of x-coordinates, y-coordinates, z-coordinates 
+#'and class
+#'omit.class logical, if \code{TRUE} a fourth column will be added containing 
+#'the assigned class
+#'@return a list of data frames with x-coordinates, y-coordinates, z-coordinates
+#'and class (optional).
+#'@export
 ## function to extract x, y, z and class from raw data
 ## returns a list of data frames
 cutData <- function(uncutfiles, 
@@ -33,14 +58,16 @@ cutData <- function(uncutfiles,
     return(ans)
 }
 
-#' @title
-#' @aliases
-#' @description
-#' @param manualMeasure a list of manual measurements, each list entry is of 
+#'@title meanManualMeasure
+#'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
+#'@description Calculate mean values of manual measurements. 
+#'@param manualMeasure a list of manual measurements, each list entry is of 
 #' class \code{data.frame} which contains x-coordinates (first column), 
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) class (fourth column)
-#' @export
+#'@return a data.frame containing x-coordinates, y-coordinates, z-coordinates and
+#' class
+#'@export
 meanManualMeasure <- function(manualMeasure) {
     if (!is.list(manualMeasure))
         stop("argument is not a list")
@@ -195,8 +222,24 @@ meanManualMeasure <- function(manualMeasure) {
     return(.mat)
 }
 
-
-
+#'@title calcModelHeights
+#'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
+#'@usage calcModelHeights(coordinates, model, method = c("2D", "IDW"),
+#'                          idw = list("p" = 2, "m", "rad" = 5))
+#'@example \notrun{
+#'calcModelHeights(coordinates, model, method = c("2D", "IDW"),
+#'                          idw = list("p" = 2, "m", "rad" = 5))
+#'}
+#'@description a function to interpolate z-coordinates at given x- and y-coordinates
+#'@param coordinates a matrix or data.frame containing x- and y-coordinates
+#'model a list of \code{data.frame}s with model values with x-coordinates,
+#'y-coordinates, z-coordinates and classes
+#'method character, use "2D" or "IDW"
+#'idw a list with parameters for IDW interpolarion
+#'@return a list of data frames with x-coordinates, y-coordinates, z-coordinates
+#'and class.
+#'@details see Shepard for IDW.
+#'@export
 ## a function to create and concatenate heights from different models 
 ## models: 1st column x, 2nd column y, 3rd column z
 calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
@@ -225,6 +268,20 @@ calcModelHeights <- function(coordinates, model, method = c("2D", "IDW"),
    return(model)
 }
 
+#'@title Calculate error values 
+#'@usage errorModel(manual, model)
+#'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
+#'@example \notrun{
+#'errorModel(manual, model)
+#'}
+#'@description a function to calculate the errors of model and manual 
+#'measurement values
+#'@param manual a matrix or data.frame containing x-, y-, z-coordinates and classes
+#'model a list containing model values
+#'@return a list of data frames with x-coordinates, y-coordinates, z-coordinates
+#'and class.
+#'@details see Shepard for IDW.
+#'@export
 errorModel <- function(manual, model) {
     
     if (!(is.data.frame(manual) || is.matrix(manual)))
@@ -245,7 +302,8 @@ errorModel <- function(manual, model) {
     return(ans)
 }
 
-#'@name Kolmogorov-Smirnow and plot
+#'@name errorNormalTest
+#'@title Kolmogorov-Smirnow and plot
 #'@author Thomas Naake <naake@@stud.uni-heidelberg.de>
 #'@param error a list of errors to compare, each list entry is of class
 #' \code{data.frame} which contains x-coordinates (first column), 
@@ -301,7 +359,8 @@ errorNormalTest <- function(error,
     } ## end for loop
 }
 
-#'@name Non-parametric statistics for non-normally distributed errors
+#'@name stat
+#'@title Non-parametric statistics for non-normally distributed errors
 #'@return A list. Each list entry comprises a data frame which bears the 
 #'statistical parameters
 #'@param error A list containing error values of models, each list entry is of class
@@ -378,6 +437,7 @@ stat <- function(error, cfi = TRUE, classes = FALSE) {
 }
 
 #'@name plotStats
+#'@title Visualize nonparametric parameters
 plotStats <- function(stats, param = c("median", "NMAD", "max|h|")) {
    
     param <- match.arg(arg = param, 
