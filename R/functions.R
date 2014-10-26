@@ -112,9 +112,9 @@ meanManualMeasure <- function(manualMeasure) {
             .Cp <- .dist[.ind] ## Cp = {Di | d <= r}, r = rad
             ## ordering of the Di by increasing distance from P
             .Cpn <- sort(.Cp) 
-            if (length(.Cp) < .m) {
+            if (length(.Cp) < .m) 
                 .Cpn <- .Cpn[1:length(.Cp)]
-            } else 
+            else 
                 .Cpn <- .Cpn[1:.m]
             ## vector for weighting factors
             .method <- vector("numeric", length(.Cpn))
