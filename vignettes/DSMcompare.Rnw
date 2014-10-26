@@ -1,0 +1,74 @@
+\documentclass[a4paper]{article}
+
+\usepackage{geometry}
+\geometry{verbose,tmargin=30mm,bmargin=30,lmargin=25,rmargin=20}
+
+\title{DSMcompare: Analysis of digital surface models by using nonparametric statistics}
+\author{Thomas Naake}
+
+\begin{document}
+
+\maketitle
+
+<<echo=TRUE>>=
+library(maptools)
+mM <- c("/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra1.shp",
+        "/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra2.shp",
+        "/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra3.shp")
+@
+Read manual measurements
+<<echo=TRUE>>=
+lmM <- readManualMeasure(files = mM)
+@ 
+
+cut data
+<<echo=TRUE>>=
+cmM <- cutData(uncutfiles = list(lmM[[1]], lmM[[2]]), 
+               columns = list("x_coord" = 9, "y_coord" = 10, "z_coord" = 6, "class" = 3),
+               omit.class = FALSE)
+@ 
+
+Calculate means of cut manual measure
+<<echo=TRUE>>=
+mcmM <- meanManualMeasure(manualMeasure = cmM)
+@ 
+
+Read model values
+<<echo=TRUE>>=
+coordinatesModel <- mcmM[, 1:2]
+MTb1 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced1_buf5m.txt", sep = ";")
+MTb2 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced2_buf5m.txt", sep = ";")
+MTb3 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced3_buf5m.txt", sep = ";")
+cModh <- calcModelHeights(coordinates = coordinatesModel, model = list(MTb1 = MTb1, MTb2 = MTb2, MTb3 = MTb3),
+                          method = "IDW",
+                          idw = list("p" = 2, "m" = 5, "rad" = 5))
+@ 
+
+Calculate error between manual measure and model values
+
+<<echo=TRUE>>=
+errorMod <- errorModel(manual = mcmM, model = cModh)
+@
+
+Test if errors are normally distributed
+<<echo=TRUE,plot=TRUE>>=
+errorNormalTest(errorMod, hist = TRUE, ksTest = FALSE, qq = FALSE, classes = FALSE)
+@ 
+
+Calculate parameter-free statistic values
+<<echo=TRUE>>=
+statValues <- stat(errorMod, cfi = FALSE, classes = FALSE)
+@ 
+
+Plot 
+
+<<echo=TRUE,plot=TRUE>>=
+plotStats(statValues, param = c("NMAD", "median", "max|h|"))
+@ 
+
+
+
+
+
+
+\end{document}
