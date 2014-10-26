@@ -1,10 +1,16 @@
 Package: DSMcompare
-Title: Analyses digital surface models with by using nonparametric statistics
+Type: Package
+Title: Analysis of digital surface models by using nonparametric statistics
 Version: 0.1.1
-Author: Thomas Naake 
+Authors@R: c(person(given = "Thomas", family= "Naake",
+	            email = "naake@stud.uni-heidelberg.de",
+		    role = c("aut")))
 Maintainer: Thomas Naake <naake@stud.uni-heidelberg.de>
 Depends: R (>= 3.1.0), maptools (>= 0.8-30)
-Description: Nonparametric statistics for comparision of digital surface models
+Imports: knitr
+Description: Compare digital surface models with given manual measures 
+	     using nonparametric statistics.
 License: GPL-2
+VignetteBuilder: knitr
 URL: https://github.com/tnaake/DSMcompare
 BugReports: https://github.com/tnaake/DSMcompare/issues
