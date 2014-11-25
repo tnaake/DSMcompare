@@ -7,7 +7,7 @@ Authors@R: c(person(given = "Thomas", family= "Naake",
     role = c("aut", "cre")))
 Maintainer: Thomas Naake <naake@stud.uni-heidelberg.de>
 Depends:
-    R (>= 3.1.0),
+    R (>= 3.1.2),
     maptools (>= 0.8-30)
 Imports:
     knitr

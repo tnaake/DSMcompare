@@ -11,10 +11,10 @@ stat(error, cfi = TRUE, classes = FALSE)
 y-coordinates (second column), z-coordinates (third column) and
 (optionally) classes (fourth column)}
 
+\item{cfi}{logical, should confidence intervall be returned}
+
 \item{classes}{logical, indicating if classes will be used concerning calculation
 of the statistics}
-
-\item{param}{A vector comprising characters which methods to use}
 }
 \value{
 A list. Each list entry comprises a data frame which bears the
