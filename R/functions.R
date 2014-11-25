@@ -376,9 +376,10 @@ errorNormalTest <- function(error,
 #' \code{data.frame} which contains x-coordinates (first column), 
 #' y-coordinates (second column), z-coordinates (third column) and
 #' (optionally) classes (fourth column)
-#'@param param A vector comprising characters which methods to use
+#'@param cfi logical, should confidence intervall be returned
 #'@param classes logical, indicating if classes will be used concerning calculation 
 #'of the statistics
+#'@export
 stat <- function(error, cfi = TRUE, classes = FALSE) {
     
     .lenError <- length(error)
@@ -447,6 +448,7 @@ stat <- function(error, cfi = TRUE, classes = FALSE) {
 
 #'@name plotStats
 #'@title Visualize nonparametric parameters
+#'@export
 plotStats <- function(stats, param = c("median", "NMAD", "max|h|")) {
    
     param <- match.arg(arg = param, 
