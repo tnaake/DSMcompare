@@ -1,74 +1,241 @@
-\documentclass[a4paper]{article}
+%\VignetteEngine{knitr}
+%\VignetteKeywords{Nonparametric statistics, Digital surface models, remote sensing}
+%\VignetteIndexEntry{}
+%\VignettePackage{DSMcompare}
+
+\documentclass[12pt,a4paper,english]{scrartcl}
+
+\usepackage[backend = bibtex]{biblatex}
+\bibliography{~/R/DSMcompare/vignettes/DSMcompare.bib}
 
 \usepackage{geometry}
-\geometry{verbose,tmargin=30mm,bmargin=30,lmargin=25,rmargin=20}
+\geometry{verbose,
+  tmargin=30mm,
+  bmargin=30mm,
+  lmargin=25mm,
+  rmargin=20mm}
+  
+\usepackage{amsmath,amsfonts,amssymb}
 
-\title{DSMcompare: Analysis of digital surface models by using nonparametric statistics}
-\author{Thomas Naake}
+\widowpenalty10000
+\clubpenalty10000
+
+
+
+\newcommand{\R}{\texttt{R} }
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\mbox{\normalfont\textsf{#1}}}}
+\newcommand{\email}[1]{\href{mailto:#1}{\normalfont\texttt{#1}}}
+
+%\usepackage{breakurl}
+\usepackage{hyperref}
+\hypersetup{%
+  pdfusetitle,
+  bookmarks = {true},
+  bookmarksnumbered = {true},
+  bookmarksopen = {true},
+  bookmarksopenlevel = 2,
+  unicode = {true},
+  breaklinks = {false},
+  hyperindex = {true},
+  colorlinks = {true},
+  linktocpage = {true},
+  plainpages = {false},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  pdfstartview = {Fit},
+  pdfpagemode = {UseOutlines},
+  pdfview = {XYZ null null null}
+}
+
+\usepackage{setspace}
+\onehalfspacing
+
+% caption formatting
+\setcapindent{0em}
+\setkomafont{captionlabel}{\sffamily\bfseries}
+\setkomafont{caption}{\sffamily}
+
+%% colors
+\definecolor{red}{rgb}{0.7,0,0}
+\definecolor{blue}{rgb}{0,0,0.8}
+
+\author{
+  Thomas Naake\thanks{\email{naake@stud.uni-heidelberg.de}}
+}
+
+\affil{
+  Ruprecht-Karls-Universit\"at Heidelberg, Germany
+}
+
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{\Rpackage{DSMcompare} : Analysis of digital surface models by using 
+  nonparametric statistics}
 
 \maketitle
 
-<<echo=TRUE>>=
-library(maptools)
-mM <- c("/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra1.shp",
-        "/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra2.shp",
-        "/home/thomas/Documents/University/Bachelor/FVA/Daten/Messpunkte/Messpunkte_Petra3.shp")
-@
-Read manual measurements
-<<echo=TRUE>>=
-lmM <- readManualMeasure(files = mM)
-@ 
+\tableofcontents
 
-cut data
-<<echo=TRUE>>=
+\paragraph{License information.} \Rpackage{DSMcompare} is under 
+active development. Current functionality is evolving and new features 
+will be added. This software is free and open-source
+software.
+
+In case you find any bugs, typos, have suggestions or other suggestions 
+you are welcome to contact the maintainer of \Rpackage{DSMcompare} directly 
+(naake@stud.uni-heidelberg.de) or leave an issue in the tracking 
+system\footnote{\url{https://github.com/tnaake/DSMcompare/issues}} providing
+as much information as possible as well as the output of 
+\Rfunction{sessionInfo()}.
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{General Information and Background}\label{sec:bg}
+Surfaces in the 3D world are characterized by their spatial (and temporal) 
+heterogenerity. It is of paramount interest to determine (x, y, z) coordinates
+with a high spatial resolution for various reasons and applications. For 
+economical reasons it is unrealistic to gain information about individual 
+single points, thus, state-of-the-art computational methods are being developped
+to deduce information from other data mainly by using photogrammetric 
+techniques. Several algorithms are available which allow for an automatable 
+computation of heights (z coordinate). 
+
+It is indispensable to gather information about the performance of these 
+algorithms. The R package \Rpackage{DSMcompare} offers an infrastructure to 
+analyse benchmark (reference) values with model values by using 
+non-parametrical statistics. \cite{Hoehle2009}
+
+
+
+\subsection{Installation}\label{sec:Installation}
+
+\Rpackage{DSMcompare} can be installed via using the package 
+\Rpackage{devtools}:
+
+Enter the following line to install the package \Rpackage{devtools} to your
+library:
+<<installdevtools, eval=FALSE>>=
+install.packages("devtools")
+@
+If \Rpackage{DSMcompare} is installed on your system enter:
+<<library,eval=FALSE>>= 
+library(devtools)
+## to install the package DSMcompare enter
+install_github("tnaake/DSMcompare")
+## load the namespace of the package and attach it 
+library(DSMcompare)
+@ 
+The package's functionality becomes now available to the user. 
+
+
+\section{Pipeline of analyses}\label{sec:pipeline}
+In the following a typical pipeline is exemplified which starts with 
+the preparation of the reference data (e.g. obtained by stereometrical 
+measurement) and the model values and goes on with the calculation 
+and visualisation of statistical parameters. 
+
+\subsection{Benchmark data}\label{sec:ref}
+
+stratified random sampling, different classes, e.g. ground surface 
+(height < 2m), transition area, tree crown (local maxima > 5 m within r=2m)
+divided into lighted and shaded situation
+Assumptionsp
+There is no error in the benchmark.
+Firstly, benchmark data needs to be loaded by the function 
+\Rfunction{readManualMeasure()} and assigned to an object in the global
+environment. By definition, benchmark data is a data set used as
+a reference, thereby, we are able to use any kind of data as a reference. 
+
+
+<<readManualMeasure,eval=FALSE>>=
+mM <- c(system.file("test_manual1.shp", package = "DSMcompare"),
+        system.file("test_manual2.shp", package = "DSMcompare"))
+## assign a list with the .shp files to the object lmM 
+lmM <- readManualMeasure(files = mM)
+@
+
+To make the data to be used in later steps the coordinates have to be 
+arranged.
+<<cutData,eval=FALSE>>=
 cmM <- cutData(uncutfiles = list(lmM[[1]], lmM[[2]]), 
                columns = list("x_coord" = 9, "y_coord" = 10, "z_coord" = 6, "class" = 3),
                omit.class = FALSE)
 @ 
 
-Calculate means of cut manual measure
-<<echo=TRUE>>=
+Calculate means of z-coordinates at points which are in the cut manual 
+measure object mcmM
+
+<<meanManualMeasure,eval=FALSE>>=
 mcmM <- meanManualMeasure(manualMeasure = cmM)
 @ 
 
+
+\subsection{Model values}\label{sec:model}
+
 Read model values
-<<echo=TRUE>>=
+<<calcModelHeights,eval=FALSE>>=
 coordinatesModel <- mcmM[, 1:2]
-MTb1 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced1_buf5m.txt", sep = ";")
-MTb2 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced2_buf5m.txt", sep = ";")
-MTb3 <- read.table(file = "/home/thomas/Documents/University/Bachelor/FVA/Daten/Models/MT_balanced3_buf5m.txt", sep = ";")
-cModh <- calcModelHeights(coordinates = coordinatesModel, model = list(MTb1 = MTb1, MTb2 = MTb2, MTb3 = MTb3),
+mod1 <- read.table(system.file("model1.txt", package = "DSMcompare"), sep = ";")
+mod2 <- read.table(system.file("model2.txt", package = "DSMcompare"), sep = ";")
+mod3 <- read.table(system.file("model3.txt", package = "DSMcompare"), sep = ";")
+cModh <- calcModelHeights(coordinates = coordinatesModel, 
+                          model = list(mod1 = mod1, mod2 = mod2, mod = mod3),
                           method = "IDW",
                           idw = list("p" = 2, "m" = 5, "rad" = 5))
 @ 
 
+\subsection{Calculation of statistics}\label{sec:stats}
+
+Accuracy parameters: NMAD = more resilient to outliers in dataset,
+estimate for standard deviation
+confidence intervalls
 Calculate error between manual measure and model values
 
-<<echo=TRUE>>=
+<<errorModel,eval=FALSE>>=
 errorMod <- errorModel(manual = mcmM, model = cModh)
 @
 
 Test if errors are normally distributed
-<<echo=TRUE,plot=TRUE>>=
+
+<<errorNormalTest,eval=FALSE>>=
 errorNormalTest(errorMod, hist = TRUE, ksTest = FALSE, qq = FALSE, classes = FALSE)
 @ 
 
 Calculate parameter-free statistic values
-<<echo=TRUE>>=
+<<stat,eval=FALSE>>=
 statValues <- stat(errorMod, cfi = FALSE, classes = FALSE)
 @ 
 
+\subsection{Visualisation}\label{sec:vis}
 Plot 
 
-<<echo=TRUE,plot=TRUE>>=
+<<plotStats,eval=FALSE>>=
 plotStats(statValues, param = c("NMAD", "median", "max|h|"))
 @ 
 
 
 
+\singlespacing
 
+\clearpage
 
+\section*{Session information}\label{sec:sessionInfo}
+
+All software and respective versions used to produce this document are 
+listed below.
+
+<<sessioninfo, results='asis', echo=FALSE>>=
+toLatex(sessionInfo())
+@ 
+
+\bibliographystyle{plainnat}
+\bibliography{DSMcompare}
 
 \end{document}
+
