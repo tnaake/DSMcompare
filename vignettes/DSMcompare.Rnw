@@ -3,10 +3,11 @@
 %\VignetteIndexEntry{}
 %\VignettePackage{DSMcompare}
 
-\documentclass[12pt,a4paper,english]{scrartcl}
+\documentclass[12pt,a4paper,english,arial]{article}
 
-\usepackage[backend = bibtex]{biblatex}
-\bibliography{~/R/DSMcompare/vignettes/DSMcompare.bib}
+\usepackage{subcaption}
+\usepackage[backend=bibtex,natbib,style=authoryear,maxcitenames=2]{biblatex}
+\addbibresource{~/R/DSMcompare/vignettes/DSMcompare.bib}
 
 \usepackage{geometry}
 \geometry{verbose,
@@ -19,7 +20,6 @@
 
 \widowpenalty10000
 \clubpenalty10000
-
 
 
 \newcommand{\R}{\texttt{R} }
@@ -51,29 +51,35 @@
   pdfview = {XYZ null null null}
 }
 
+
+% caption formatting
+%\setcapindent{0em}
+%\setkomafont{captionlabel}{\sffamily\bfseries}
+%\setkomafont{caption}{\sffamily}
+
+%% colors
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{blue}{rgb}{0,0,1}
+
 \usepackage{setspace}
 \onehalfspacing
 
-% caption formatting
-\setcapindent{0em}
-\setkomafont{captionlabel}{\sffamily\bfseries}
-\setkomafont{caption}{\sffamily}
+\usepackage{authblk}
 
-%% colors
-\definecolor{red}{rgb}{0.7,0,0}
-\definecolor{blue}{rgb}{0,0,0.8}
-
-\author{
-  Thomas Naake\thanks{\email{naake@stud.uni-heidelberg.de}}
+\author[1]{
+  Thomas Naake\thanks{
+    \email{naake@stud.uni-heidelberg.de} 
+  }
 }
 
-\affil{
+\affil[1]{
   Ruprecht-Karls-Universit\"at Heidelberg, Germany
 }
 
+\usepackage[english]{babel}
+\usepackage{color}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
 
 \title{\Rpackage{DSMcompare} : Analysis of digital surface models by using 
   nonparametric statistics}
@@ -143,7 +149,7 @@ and visualisation of statistical parameters.
 \subsection{Benchmark data}\label{sec:ref}
 
 stratified random sampling, different classes, e.g. ground surface 
-(height < 2m), transition area, tree crown (local maxima > 5 m within r=2m)
+(height $<$2~m), transition area, tree crown (local maxima $>$5~m within r=2~m)
 divided into lighted and shaded situation
 Assumptionsp
 There is no error in the benchmark.
@@ -181,9 +187,12 @@ mcmM <- meanManualMeasure(manualMeasure = cmM)
 Read model values
 <<calcModelHeights,eval=FALSE>>=
 coordinatesModel <- mcmM[, 1:2]
-mod1 <- read.table(system.file("model1.txt", package = "DSMcompare"), sep = ";")
-mod2 <- read.table(system.file("model2.txt", package = "DSMcompare"), sep = ";")
-mod3 <- read.table(system.file("model3.txt", package = "DSMcompare"), sep = ";")
+mod1 <- read.table(system.file("model1.txt", package = "DSMcompare"), 
+        sep = ";")
+mod2 <- read.table(system.file("model2.txt", package = "DSMcompare"), 
+        sep = ";")
+mod3 <- read.table(system.file("model3.txt", package = "DSMcompare"), 
+        sep = ";")
 cModh <- calcModelHeights(coordinates = coordinatesModel, 
                           model = list(mod1 = mod1, mod2 = mod2, mod = mod3),
                           method = "IDW",
@@ -226,6 +235,7 @@ plotStats(statValues, param = c("NMAD", "median", "max|h|"))
 \clearpage
 
 \section*{Session information}\label{sec:sessionInfo}
+\addcontentsline{toc}{section}{Session information}
 
 All software and respective versions used to produce this document are 
 listed below.
@@ -234,8 +244,7 @@ listed below.
 toLatex(sessionInfo())
 @ 
 
-\bibliographystyle{plainnat}
-\bibliography{DSMcompare}
+\printbibliography
 
 \end{document}
 
