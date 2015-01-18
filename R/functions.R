@@ -321,7 +321,7 @@ errorModel <- function(manual, model) {
 errorNormalTest <- function(error, 
         hist = TRUE, 
         ksTest = FALSE, 
-        qq = FALSE, classes = FALSE) {
+        qq = FALSE) {
     
     if (!is.list(error))
         stop("argument is not a list")
@@ -380,7 +380,7 @@ errorNormalTest <- function(error,
 #'@param classes logical, indicating if classes will be used concerning calculation 
 #'of the statistics
 #'@export
-stat <- function(error, cfi = TRUE, classes = FALSE) {
+stat <- function(error, cfi = TRUE) {
     
     .lenError <- length(error)
     ans <- error
