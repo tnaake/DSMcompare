@@ -170,7 +170,8 @@ To make the data to be used in later steps the coordinates have to be
 arranged.
 <<cutData,eval=FALSE>>=
 cmM <- cutData(uncutfiles = list(lmM[[1]], lmM[[2]]), 
-               columns = list("x_coord" = 9, "y_coord" = 10, "z_coord" = 6, "class" = 3),
+               columns = list("x_coord" = 9, "y_coord" = 10, 
+                              "z_coord" = 6, "class" = 3),
                omit.class = FALSE)
 @ 
 
@@ -187,12 +188,9 @@ mcmM <- meanManualMeasure(manualMeasure = cmM)
 Read model values
 <<calcModelHeights,eval=FALSE>>=
 coordinatesModel <- mcmM[, 1:2]
-mod1 <- read.table(system.file("model1.txt", package = "DSMcompare"), 
-        sep = ";")
-mod2 <- read.table(system.file("model2.txt", package = "DSMcompare"), 
-        sep = ";")
-mod3 <- read.table(system.file("model3.txt", package = "DSMcompare"), 
-        sep = ";")
+mod1 <- read.table(system.file("model1.txt", package = "DSMcompare"))
+mod2 <- read.table(system.file("model2.txt", package = "DSMcompare"))
+mod3 <- read.table(system.file("model3.txt", package = "DSMcompare"))
 cModh <- calcModelHeights(coordinates = coordinatesModel, 
                           model = list(mod1 = mod1, mod2 = mod2, mod = mod3),
                           method = "IDW",
@@ -213,12 +211,12 @@ errorMod <- errorModel(manual = mcmM, model = cModh)
 Test if errors are normally distributed
 
 <<errorNormalTest,eval=FALSE>>=
-errorNormalTest(errorMod, hist = TRUE, ksTest = FALSE, qq = FALSE, classes = FALSE)
+errorNormalTest(errorMod, hist = TRUE, ksTest = FALSE, qq = FALSE)
 @ 
 
 Calculate parameter-free statistic values
 <<stat,eval=FALSE>>=
-statValues <- stat(errorMod, cfi = FALSE, classes = FALSE)
+statValues <- stat(errorMod, cfi = FALSE)
 @ 
 
 \subsection{Visualisation}\label{sec:vis}
