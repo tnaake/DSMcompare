@@ -104,19 +104,26 @@ as much information as possible as well as the output of
 
 \subsection{General Information and Background}\label{sec:bg}
 Surfaces in the 3D world are characterized by their spatial (and temporal) 
-heterogenerity. It is of paramount interest to determine (x, y, z) coordinates
-with a high spatial resolution for various reasons and applications. For 
-economical reasons it is unrealistic to gain information about individual 
-single points, thus, state-of-the-art computational methods are being developped
-to deduce information from other data mainly by using photogrammetric 
+heterogenerity. It is of paramount interest to determine (x, y, z)-coordinates
+with a high spatial resolution for various reasons and applications. In 
+remote sensing, it is unrealistic  for economical to gain information about 
+individual single points, thus, state-of-the-art computational methods are being 
+developped to deduce information from other data mainly by using photogrammetric 
 techniques. Several algorithms are available which allow for an automatable 
-computation of heights (z coordinate). 
+computation of heights (z~coordinate). 
 
 It is indispensable to gather information about the performance of these 
 algorithms. The R package \Rpackage{DSMcompare} offers an infrastructure to 
 analyse benchmark (reference) values with model values by using 
-non-parametrical statistics. \cite{Hoehle2009}
-
+non-parametrical statistics. \citet{Hoehle2009} proposed robust measures for the 
+accurary assessment of digital surface models (DSM), which are implemented in 
+the \Rpackage{DSMcompare} package. Prerequisites for a sound analysis are 
+accurate benchmark values and normally the errors does not follow a 
+Gaussian distribution. Hence, measures have to be used that are reliable 
+without being influenced by a skew distribution or outliers:  
+\Rpackage{DSMcompare} comes along with the infrastructure to calculate 
+median, the normalized median absolute deviation (NMAD), the 68.3\%~quantile 
+and the 95\%~quantile. 
 
 
 \subsection{Installation}\label{sec:Installation}
